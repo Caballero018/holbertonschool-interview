@@ -1,6 +1,10 @@
 #!/usr/bin/python3
+"GG"
+
 
 def canUnlockAll(boxes):
+    "GG"
+
     counter = 0
     dic_box = {}
     for i in range(len(boxes) - 1):
