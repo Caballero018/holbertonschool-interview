@@ -1,79 +1,110 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "holberton.h"
 
-
-void mul(char *num1, char *num2)
+/**
+ * _isdigit - entry to isdigit
+ * Desc: _isdigit function to now if in the string
+ * there are characters
+ * @s: pointer to string
+ * Return: 1 if only digits 0 if there's a character
+ */
+int _isdigit(char *s)
 {
-    unsigned int n1, n2, mul;
-    char result[1024];
-    char *res;
+	int i;
 
-    n1 = atoi(num1);
-    n2 = atoi(num2);
-
-    mul = n1 * n2;
-    sprintf(result, "%u", mul);
-
-    res = result;
-    while (*res != '\0')
-    {
-        _putchar(*res);
-        res++;
-    }
-    _putchar('\n');
+	i = 0;
+	while (*(s + i) != '\0')
+	{
+		if (*(s + i) < '0' || *(s + i) > '9')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
-void errorPrint()
+/**
+ * _strlen - entry to strlen
+ * Desc: _strlen function to know the length of a string
+ * @s: pointer to string
+ * Return: string length with count
+ */
+int _strlen(char *s)
 {
-    char err[] = "Error\n";
-    char *er = err;
-    int i = 0;
+	int count = 0;
 
-    while (*er != '\0')
-    {
-        _putchar(*er);
-        er++;
-        i++;
-    }
+	while (*s)
+	{
+		s++;
+		count++;
+	}
+	return (count);
 }
 
-int isDigit(char *n1, char *n2)
-{
-    int isdigit = 0;
+/**
+ * infinite_multiply - entry to infinite multiply
+ * Desc: infinite_multiply function to multiply int strings
+ * @s1: 1st string to multiply
+ * @s2: 2nd string to multiply
+ * Return: result
+ */
 
-    while (*n1 != '\0')
-    {
-        if (!((*n1 - '0') <= 9 && (*n1 - '0') >= 0))
-            isdigit = 1;
-        n1++;
-    }
-    while (*n2 != '\0')
-    {
-        if (!((*n2 - '0') <= 9 && (*n2 - '0') >= 0))
-            isdigit = 1;
-        n2++;
-    }
-    return isdigit;
+char *infinite_multiply(char *s1, char *s2)
+{
+	char *result;
+	int x, y, z, total_length, len_s1, len_s2;
+
+	len_s1 = _strlen(s1), len_s2 = _strlen(s2);
+	total_length = len_s1 + len_s2;
+
+	result = malloc(total_length);
+	if (result == 0)
+		printf("Error\n"), exit(98);
+
+	for (len_s1--; len_s1 >= 0; len_s1--)
+	{
+		x = s1[len_s1] - '0';
+		z = 0;
+		for (len_s2 = _strlen(s2) - 1; len_s2 >= 0; len_s2--)
+		{
+			y = s2[len_s2] - '0';
+			z += result[len_s1 + len_s2 + 1] + (x * y);
+			result[len_s1 + len_s2 + 1] = z % 10;
+			z /= 10;
+		}
+		if (z)
+			result[len_s1 + len_s2 + 1] += z;
+	}
+	return (result);
 }
 
+/**
+ * main - entry to main
+ * Desc: main function that passes base
+ * base 10 numbers to be multiplied
+ * @argc: number of arguments
+ * @argv: arguments
+ * Return: multiplied numbers
+ */
 int main(int argc, char *argv[])
 {
-    int isdigit;
+	int i, x = 0, length = 0;
+	char *result;
 
-    if (argc < 3)
-    {
-        errorPrint();
-        exit(98);
-    }
+	if (argc != 3 || !_isdigit(argv[1]) || !_isdigit(argv[2]))
+		puts("Error"), exit(98);
 
-    isdigit = isDigit(argv[1], argv[2]);
-    if (isdigit) {
-        errorPrint();
-        exit(98);
-    }
+	length = _strlen(argv[1]) + _strlen(argv[2]);
+	result = infinite_multiply(argv[1], argv[2]);
 
-    mul(argv[1], argv[2]);
-
-    return (0);
+	for (i = 0; i < length; i++)
+	{
+		if (result[i])
+			x = 1;
+		if (x)
+			_putchar(result[i] + '0');
+	}
+	if (x == 0)
+		_putchar('0');
+	puts("");
+	free(result);
+	return (0);
 }
