@@ -2,10 +2,9 @@
 """
 Module that have a rotate_2d_matrix function
 """
-from typing import List
 
 
-def rotate_2d_matrix(matrix: List[int]):
+def rotate_2d_matrix(matrix):
     """rotate_2d_matrix
 
     Keyword arguments:
